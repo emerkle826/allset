@@ -1,0 +1,30 @@
+deb http://us.archive.ubuntu.com/ubuntu/ focal main restricted
+deb http://us.archive.ubuntu.com/ubuntu/ focal-updates main restricted
+deb http://us.archive.ubuntu.com/ubuntu/ focal universe
+deb http://us.archive.ubuntu.com/ubuntu/ focal-updates universe
+deb http://us.archive.ubuntu.com/ubuntu/ focal multiverse
+deb http://us.archive.ubuntu.com/ubuntu/ focal-updates multiverse
+deb http://us.archive.ubuntu.com/ubuntu/ focal-backports main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu focal-security main restricted
+deb http://security.ubuntu.com/ubuntu focal-security universe
+deb http://security.ubuntu.com/ubuntu focal-security multiverse
+deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /
+deb https://apt.kitware.com/ubuntu/ focal main
+deb http://ppa.launchpad.net/oibaf/graphics-drivers/ubuntu focal main
+deb http://ppa.launchpad.net/ethereum/ethereum/ubuntu focal main
+deb http://ppa.launchpad.net/ethereum/ethereum/ubuntu focal main
+deb [ trusted=yes ] file:/var/opt/amdgpu-pro-local/ ./
+deb http://us.archive.ubuntu.com/ubuntu/ focal main restricted
+deb http://us.archive.ubuntu.com/ubuntu/ focal-updates main restricted
+deb http://us.archive.ubuntu.com/ubuntu/ focal universe
+deb http://us.archive.ubuntu.com/ubuntu/ focal-updates universe
+deb http://us.archive.ubuntu.com/ubuntu/ focal multiverse
+deb http://us.archive.ubuntu.com/ubuntu/ focal-updates multiverse
+deb http://us.archive.ubuntu.com/ubuntu/ focal-backports main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu focal-security main restricted
+deb http://security.ubuntu.com/ubuntu focal-security universe
+deb http://security.ubuntu.com/ubuntu focal-security multiverse
+deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /
+deb https://apt.kitware.com/ubuntu/ focal main
+
+

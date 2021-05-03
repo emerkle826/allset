@@ -1,0 +1,29 @@
+#!/bin/bash
+
+PID_FILE=${HOME}/Desktop/miner.pid
+
+# check that the pid file exists
+echo "================================================"
+if [ -r ${PID_FILE} ]
+then
+  # pid exists, see if the process is running
+  echo "PID_FILE \"${PID_FILE}\" exists"
+  PID=`cat ${PID_FILE}`
+  echo "PID is ${PID}"
+  # check that the process is an actual ethminer process
+  ps -q ${PID}|grep -sq ethminer
+  IS_ETHMINER="$?"
+  if [ "${IS_ETHMINER}" -eq "0" ]
+  then
+    echo "PID is an ethminer process, stoping"
+    kill -6 ${PID}
+  else
+    echo "PID is not an ethminer process"
+    ps -fq ${PID}
+    echo ""
+    echo "To start mining, execute \"start_miner\""
+  fi
+else
+  echo "NO READABLE PID FILE: ${PID_FILE}"
+fi
+echo "================================================"

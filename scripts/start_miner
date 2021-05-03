@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# stratum1+tcp://0x94F533789cf2b9b33c3bEf1d3200c8f9B2792558@us1.ethermine.org:4444
+# Dashboard:
+#     https://ethermine.org/miners/94F533789cf2b9b33c3bEf1d3200c8f9B2792558/dashboard
+
+MINING_PROTOCOL="stratum1+tcp"
+MINING_WALLET="0x94F533789cf2b9b33c3bEf1d3200c8f9B2792558"
+MINING_HOST="us1.ethermine.org"
+MINING_PORT="4444"
+API_PORT=8080
+
+function get_option() {
+  # see if we are using AMD
+  test=`lspci|grep VGA|grep "Advanced Micro Devices"`
+  echo "========================================="
+  if [ $? -eq 0 ]
+  then
+     # it's AMD
+     echo "AMD cards detected, using \"-G\""
+     GPU_OPTION="-G"
+  else
+     # it's Nvidia
+     echo "NVidia cards detected, using \"-U\""
+     GPU_OPTION="-U"
+  fi
+}
+
+get_option
+
+# build pool
+MINING_POOL="${MINING_PROTOCOL}://${MINING_WALLET}@${MINING_HOST}:${MINING_PORT}"
+#build command
+MINING_CMD="/usr/local/bin/ethminer ${GPU_OPTION} -P ${MINING_POOL} --api-port ${API_PORT} --HWMON 2"
+echo "Running Mining Command: ${MINING_CMD}"
+echo ""
+echo "To see miner status, run \"miner_status\""
+echo "To stop mining, run \"stop_miner\""
+echo "To see stats in a web browser, visit http://allset:8080"
+echo "To see mining dashboard, visit https://ethermine.org/miners/${MINING_WALLET}/dashboard"
+echo "========================================="
+exec nohup ${MINING_CMD} >> ${HOME}/Desktop/miner.log 2>&1 &
+echo "$!" > ${HOME}/Desktop/miner.pid
