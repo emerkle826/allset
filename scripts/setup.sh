@@ -9,7 +9,10 @@ timedatectl set-ntp true
 # partition the Harddrive (/dev/sda)
 echo ""
 echo "Setting up harddrive partitions. Enter \"Ignore\" and/or confirm overwriting partions"
-parted /dev/sda mklabel gpt mkpart "EFI system partition" fat32 1MiB set 1 esp on mkpart "base filesystem partition" ext4 261MiB 100%
+parted /dev/sda mklabel gpt
+parted /dev/sda mkpart "EFI system partition" fat32 1MiB 512MiB
+parted /dev/sda set 1 esp on
+parted /dev/sda mkpart "base filesystem partition" ext4 513MiB 100%
 
 # Format EFI partition
 mkfs.fat -F32 /dev/sda1
