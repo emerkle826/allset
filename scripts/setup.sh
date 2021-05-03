@@ -94,18 +94,21 @@ echo "Creating \"allset\" user. When prompted, enter desired password, then conf
 arch-chroot /mnt useradd -g users -G wheel -s /bin/bash -m allset
 arch-chroot /mnt passwd allset
 
+# Setup allset user in sudoers file
+arch-chroot /mnt sh -c 'echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers'
+
 # Make custom packages directory
 echo "Cretaing custom_packages directory"
-arch-chroot /mnt su --login allset mkdir /home/allset/custom_packages
+arch-chroot -u allset /mnt mkdir /home/allset/custom_packages
 
 # Clone AMD drivers
 echo "Cloning OpenCL AMD GPU drievrs"
-arch-chroot /mnt su --login allset git clone https://aur.archlinux.org/opencl-amd.git /home/allset/custom_packages/opencl-amd
+arch-chroot -u allset /mnt git clone https://aur.archlinux.org/opencl-amd.git /home/allset/custom_packages/opencl-amd
 echo "Building drivers"
-arch-chroot /mnt cd /home/allset/custom_packages/opencl-amd && su --login allset git reset --hard 88cc39d2619dddf7c62fc4e4eb3726ab04cb8f92&& su --login allset makepkg -sicCf --noconfirm
+arch-chroot -u allset /mnt sh -c 'cd /home/allset/custom_packages/opencl-amd && git reset --hard 88cc39d2619dddf7c62fc4e4eb3726ab04cb8f92 && makepkg -sicCf --noconfirm'
 
 # Clone ethminer from AUR
 echo "Cloning Ethminer"
-arch-chroot /mnt su --login allset git clone https://aur.archlinux.org/ethminer.git /home/allset/custom_packages/ethminer
+arch-chroot -u allset /mnt git clone https://aur.archlinux.org/ethminer.git /home/allset/custom_packages/ethminer
 echo "Building Ethminer"
-arch-chroot /mnt cd /home/allset/custom_packages/ethminer && su --login allset makepkg -sicCf --noconfirm
+arch-chroot -u /mnt sh -c 'cd /home/allset/custom_packages/ethminer && makepkg -sicCf --noconfirm'
