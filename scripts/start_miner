@@ -26,6 +26,39 @@ function get_option() {
   fi
 }
 
+function wait_for_gpus() {
+  # get clinfo and wait for cards to be ready
+  gpu_count=$(clinfo|grep "Number of devices"|awk '{print $4}')
+  if [ ${gpu_count} -gt 0 ]
+  then
+    date >> /home/allset/ethminer/miner.log
+    echo "We have at least 1 gpu" >> /home/allset/ethminer/miner.log
+    return
+  else
+    date >> /home/allset/ethminer/miner.log
+    echo "clinfo detected no gpus" >> /home/allset/ethminer/miner.log
+    clinfo >> /home/allset/ethminer/miner.log
+    # no gpus ready
+    sleep 5
+  fi
+  # try again
+  gpu_count=$(clinfo|grep "Number of devices"|awk '{print $4}')
+  if [ ${gpu_count} -gt 0 ]
+  then
+    date >> /home/allset/ethminer/miner.log
+    echo "We have at least 1 gpu" >> /home/allset/ethminer/miner.log
+    return
+  else
+    date >> /home/allset/ethminer/miner.log
+    echo "clinfo detected no gpus" >> /home/allset/ethminer/miner.log
+    clinfo >> /home/allset/ethminer/miner.log
+    # no gpus ready, done
+    exit -1
+  fi
+}
+
+wait_for_gpus
+
 get_option
 
 # build pool
