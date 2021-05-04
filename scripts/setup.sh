@@ -49,7 +49,7 @@ EOF
 
 # Install base system to new drives
 echo "Installing base system"
-pacstrap /mnt base base-devel linux linux-firmware lxde git openssh firefox ttf-dejavu curl intel-ucode clinfo vi vim grub efibootmgr bash-completion
+pacstrap /mnt base base-devel linux linux-firmware lxde git openssh firefox ttf-dejavu curl intel-ucode clinfo vi vim grub efibootmgr bash-completion wget
 echo "Base installation complete."
 
 # Setup /etc/fstab
@@ -103,7 +103,7 @@ arch-chroot -u allset /mnt mkdir /home/allset/custom_packages
 
 # Clone AMD drivers
 echo "Cloning OpenCL AMD GPU drievrs"
-arch-chroot -u allset /mnt git clone https://aur.archlinux.org/opencl-amd.git /home/allset/custom_packages/opencl-amd
+arch-chroot -u allset /mnt git clone https://github.com/emerkle826/opencl-amd.git /home/allset/custom_packages/opencl-amd
 echo "Building drivers"
 arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && cd /home/allset/custom_packages/opencl-amd && git reset --hard 88cc39d2619dddf7c62fc4e4eb3726ab04cb8f92 && makepkg -sicCf --noconfirm'
 
@@ -114,7 +114,7 @@ arch-chroot -u allset /mnt wget -O /home/allset/.hunter/_Base/Download/Boost/1.6
 
 # Clone ethminer from AUR
 echo "Cloning Ethminer"
-arch-chroot -u allset /mnt git clone https://aur.archlinux.org/ethminer.git /home/allset/custom_packages/ethminer
+arch-chroot -u allset /mnt git clone https://github.com/emerkle826/ethminer.git /home/allset/custom_packages/ethminer
 echo "Building Ethminer"
 arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && cd /home/allset/custom_packages/ethminer && makepkg -sicCf --noconfirm'
 
@@ -142,8 +142,8 @@ arch-chroot /mnt ln -s /usr/lib/systemd/system/systemd-resolved.service /etc/sys
 # Setup LXDM
 echo "setting up LXDM for GPU"
 arch-chroot /mnt ln -s /usr/lib/systemd/system/lxdm.service /etc/systemd/system/display-manager.service
-echo "autologin=allset" >> /mnt/etc/lxdm/lxdm.conf
-echo "session=/usr/bin/startlxde" >> /mnt/etc/lxdm/lxdm.conf
+arch-chroot /mnt sed -i 's/^# autologin.*$/autologin=allset/g' /etc/lxdm/lxdm.conf
+arch-chroot /mnt sed -i 's/^# session.*$/session=\/usr\/bin\/startlxde/g' /etc/lxdm/lxdm.conf
 
 # Setup GRUB
 arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB
