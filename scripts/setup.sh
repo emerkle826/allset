@@ -7,7 +7,6 @@ echo "Setting up system clock"
 timedatectl set-ntp true
 
 # partition the Harddrive (/dev/sda)
-echo ""
 echo "Setting up harddrive partitions. Enter \"Ignore\" and/or confirm overwriting partions"
 parted -s /dev/sda mklabel gpt
 parted -s /dev/sda mkpart "EFI" fat32 1MiB 512MiB
@@ -21,7 +20,6 @@ mkfs.fat -F32 /dev/sda1
 mkfs.ext4 -F /dev/sda2
 
 # Mount main system partition
-echo ""
 echo "Mounting root partition"
 mount /dev/sda2 /mnt
 
@@ -53,7 +51,6 @@ pacstrap /mnt base base-devel linux linux-firmware lxde git openssh firefox ttf-
 echo "Base installation complete."
 
 # Setup /etc/fstab
-echo ""
 echo "Genertaing fstab file"
 genfstab -U /mnt > /mnt/etc/fstab
 
@@ -84,10 +81,6 @@ arch-chroot /mnt hwclock --systohc
 # Generate locale
 echo "Generating locale"
 arch-chroot /mnt locale-gen
-
-# Update root password
-echo "Update ROOT password. Enter new password, then confirm"
-arch-chroot /mnt passwd
 
 # Create allset user
 echo "Creating \"allset\" user. When prompted, enter desired password, then confirm"
@@ -201,7 +194,7 @@ echo "Installation complete. Unmounting disks and restarting."
 umount /dev/sda1 /dev/sda2
 echo "Trying to umount USB. You can ignore any failures that follow."
 umount /dev/sdb3
-echo "Press enter to reboot"
+echo "Press enter to reboot. Remove USB stick after pressing enter."
 read junk
 reboot
 
