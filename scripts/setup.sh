@@ -148,6 +148,8 @@ arch-chroot /mnt ln -s /usr/lib/systemd/system/systemd-networkd-wait-online.serv
 # systemd-resolvd
 arch-chroot /mnt ln -s /usr/lib/systemd/system/systemd-resolved.service /etc/systemd/system/dbus-org.freedesktop.resolve1.service
 arch-chroot /mnt ln -s /usr/lib/systemd/system/systemd-resolved.service /etc/systemd/system/multi-user.target.wants/systemd-resolved.service
+# ssh daemon
+arch-chroot /mnt ln -s /usr/lib/systemd/system/sshd.service /etc/systemd/system/multi-user.target.wants/sshd.service
 
 # Setup LXDM
 echo "setting up LXDM for GPU"
@@ -174,7 +176,7 @@ arch-chroot /mnt ln -s /home/allset/ethminer/ethminer.service /etc/systemd/syste
 
 echo "Please type in your Etherium wallet ID (default: 94F533789cf2b9b33c3bEf1d3200c8f9B2792558):"
 read WALLETID
-if [ "${WALLETID}" == "" ]
+if [ "${WALLETID}" = "" ]
 then
   WALLETID="94F533789cf2b9b33c3bEf1d3200c8f9B2792558"
 fi
