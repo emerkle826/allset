@@ -115,6 +115,7 @@ arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && cd /home/allset/cu
 
 # Setup Networking DHCP
 echo "Setting up Networking/DHCP"
+mkdir -p /mnt/etc/systemd/network /etc/systemd/system/sockets.target.wants /etc/systemd/system/network-online.target.wants
 echo << EOF > /mnt/etc/systemd/network/20-wired.network
 [Match]
 Name=*
