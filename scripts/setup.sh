@@ -163,12 +163,15 @@ arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 # Setup ethminer scripts
 echo "Setting up Ethminer scripts"
 arch-chroot -u allset /mnt mkdir /home/allset/ethminer
+arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && echo "export PATH=~/ethminer:${PATH}" >> /home/allset/.bashrc'
 arch-chroot -u allset /mnt wget -O /home/allset/ethminer/miner_status https://raw.githubusercontent.com/emerkle826/allset/master/scripts/miner_status
 arch-chroot -u allset /mnt wget -O /home/allset/ethminer/start_miner https://raw.githubusercontent.com/emerkle826/allset/master/scripts/start_miner
 arch-chroot -u allset /mnt wget -O /home/allset/ethminer/stop_miner https://raw.githubusercontent.com/emerkle826/allset/master/scripts/stop_miner
 arch-chroot /mnt wget -O /home/allset/ethminer/ethminer.service https://raw.githubusercontent.com/emerkle826/allset/master/scripts/ethminer.service
-arch-chroot /mnt chmod 755 /home/allset/ethminer/*
+chmod 755 /mnt/home/allset/ethminer/*
+arch-chroot /mnt ln -s /home/allset/ethminer/ethminer.service /etc/systemd/system/multi-user.target.wants/ethminer.service
 arch-chroot /mnt ln -s /home/allset/ethminer/ethminer.service /etc/systemd/system/ethminer.service
+
 echo "Please type in your Etherium wallet ID (default: 94F533789cf2b9b33c3bEf1d3200c8f9B2792558):"
 read WALLETID
 if [ "${WALLETID}" == "" ]
@@ -176,7 +179,8 @@ then
   WALLETID="94F533789cf2b9b33c3bEf1d3200c8f9B2792558"
 fi
 echo "Using wallet ID: ${WALLETID}"
-arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && echo ${WALLETID} > ${HOME}/ethminer/walletid'
+echo ${WALLETID} > /mnt/home/allset/ethminer/walletid
+arch-chroot /mnt chown allset:user /home/allset/ethminer/walletid
 
 # Unmount disks and reboot
 echo "Installation complete. Unmounting disks and restarting."
