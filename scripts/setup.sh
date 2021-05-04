@@ -49,7 +49,7 @@ EOF
 
 # Install base system to new drives
 echo "Installing base system"
-pacstrap /mnt base base-devel linux linux-firmware lxde git openssh firefox ttf-dejavu curl intel-ucode clinfo vi vim grub efibootmgr bash-completion wget
+pacstrap /mnt base base-devel linux linux-firmware lxde git openssh firefox ttf-dejavu curl intel-ucode clinfo vi vim grub efibootmgr bash-completion wget logrotate
 echo "Base installation complete."
 
 # Setup /etc/fstab
@@ -150,6 +150,18 @@ arch-chroot /mnt ln -s /usr/lib/systemd/system/systemd-resolved.service /etc/sys
 arch-chroot /mnt ln -s /usr/lib/systemd/system/systemd-resolved.service /etc/systemd/system/multi-user.target.wants/systemd-resolved.service
 # ssh daemon
 arch-chroot /mnt ln -s /usr/lib/systemd/system/sshd.service /etc/systemd/system/multi-user.target.wants/sshd.service
+
+# Setup logrotate
+cat << EOF > /etc/logrotate.d/ethminer
+/home/allset/ethminer/miner.log {
+   rotate 5
+   weekly
+   missingok
+   create 0664 allset users
+   compress
+}
+EOF
+arch-chroot /mnt ln -s /usr/lib/systemd/system/logrotate.timer /etc/systemd/system/timers.target.wants/logrotate.timer
 
 # Setup LXDM
 echo "setting up LXDM for GPU"
