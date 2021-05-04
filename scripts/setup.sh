@@ -146,5 +146,25 @@ arch-chroot /mnt sed -i 's/^# autologin.*$/autologin=allset/g' /etc/lxdm/lxdm.co
 arch-chroot /mnt sed -i 's/^# session.*$/session=\/usr\/bin\/startlxde/g' /etc/lxdm/lxdm.conf
 
 # Setup GRUB
+echo "Setting up GRUB"
 arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+
+# Setup ethminer scripts
+echo "Setting up Ethminer scripts"
+arch-chroot -u allset /mnt mkdir /home/allset/ethminer
+arch-chroot -u allset /mnt wget -O /home/allset/ethminer/miner_status https://raw.githubusercontent.com/emerkle826/allset/master/scripts/miner_status
+arch-chroot -u allset /mnt wget -O /home/allset/ethminer/start_miner https://raw.githubusercontent.com/emerkle826/allset/master/scripts/start_miner
+arch-chroot -u allset /mnt wget -O /home/allset/ethminer/stop_miner https://raw.githubusercontent.com/emerkle826/allset/master/scripts/stop_miner
+arch-chroot /mnt wget -O /home/allset/ethminer/ethminer.service https://raw.githubusercontent.com/emerkle826/allset/master/scripts/ethminer.service
+arch-chroot /mnt chmod 755 /home/allset/ethminer/*
+arch-chroot /mnt ln -s /home/allset/ethminer/ethminer.service /etc/systemd/system/ethminer.service
+echo "Please type in your Etherium wallet ID (default: 94F533789cf2b9b33c3bEf1d3200c8f9B2792558):"
+read WALLETID
+if [ "${WALLETID}" == "" ]
+then
+  WALLETID="94F533789cf2b9b33c3bEf1d3200c8f9B2792558"
+fi
+echo "Using wallet ID: ${WALLETID}"
+arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && echo ${WALLETID} > ${HOME}/ethminer/walletid'
+

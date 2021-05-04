@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PID_FILE=${HOME}/Desktop/miner.pid
+PID_FILE=${HOME}/ethminer/miner.pid
 
 # check that the pid file exists
 echo "================================================"

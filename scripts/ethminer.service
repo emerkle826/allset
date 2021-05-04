@@ -10,7 +10,7 @@ Wants=network-online.target
 After=network-online.target nss-lookup.target
 
 [Service]
-ExecStart=/home/allset/bin/start_miner
+ExecStart=/home/allset/ethminer/start_miner
 Type=oneshot
 RemainAfterExit=yes
 User=allset
