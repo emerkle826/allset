@@ -168,3 +168,12 @@ fi
 echo "Using wallet ID: ${WALLETID}"
 arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && echo ${WALLETID} > ${HOME}/ethminer/walletid'
 
+# Unmount disks and reboot
+echo "Installation complete. Unmounting disks and restarting."
+umount /dev/sda1 /dev/sda2
+echo "Trying to umount USB. You can ignore any failures that follow."
+umount /dev/sdb3
+echo "Press enter to reboot"
+read junk
+reboot
+
