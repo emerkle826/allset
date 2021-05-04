@@ -101,6 +101,16 @@ arch-chroot /mnt sh -c 'echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers'
 echo "Cretaing custom_packages directory"
 arch-chroot -u allset /mnt mkdir /home/allset/custom_packages
 
+# Setup makepkg config
+cat << EOF > /mnt/home/allset/.makepkg.conf
+MAKEFLAGS="-j$(nproc)"
+INTEGRITY_CHECK=(md5 sha1 sha256)
+COMPRESSXZ=(xz -c -z - --threads=0)
+COMPRESSZST=(zstd -c -z -q - --threads=0)
+EOF
+
+arch-chroot /mnt chown allset:user /home/allset/.makepkg.conf
+
 # Clone AMD drivers
 echo "Cloning OpenCL AMD GPU drievrs"
 arch-chroot -u allset /mnt git clone https://github.com/emerkle826/opencl-amd.git /home/allset/custom_packages/opencl-amd

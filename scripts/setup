@@ -3,4 +3,4 @@
 # get the script from GitHub
 curl -o- https://raw.githubusercontent.com/emerkle826/allset/master/scripts/setup.sh > setup.sh
 chmod 755 setup.sh
-# ./setup.sh
+./setup.sh
