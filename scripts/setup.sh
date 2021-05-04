@@ -49,7 +49,7 @@ EOF
 
 # Install base system to new drives
 echo "Installing base system"
-pacstrap /mnt base base-devel linux linux-firmware lxde git openssh firefox ttf-dejavu curl intel-ucode clinfo vi vim grub efibootmgr
+pacstrap /mnt base base-devel linux linux-firmware lxde git openssh firefox ttf-dejavu curl intel-ucode clinfo vi vim grub efibootmgr bash-completion
 echo "Base installation complete."
 
 # Setup /etc/fstab
@@ -106,6 +106,11 @@ echo "Cloning OpenCL AMD GPU drievrs"
 arch-chroot -u allset /mnt git clone https://aur.archlinux.org/opencl-amd.git /home/allset/custom_packages/opencl-amd
 echo "Building drivers"
 arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && cd /home/allset/custom_packages/opencl-amd && git reset --hard 88cc39d2619dddf7c62fc4e4eb3726ab04cb8f92 && makepkg -sicCf --noconfirm'
+
+# Download Boost libs for Ethminer
+echo "Setting up Boost"
+arch-chroot -u allset /mnt mkdir -p /home/allset/.hunter/_Base/Download/Boost/1.66.0/075d0b4
+arch-chroot -u allset /mnt wget -O /home/allset/.hunter/_Base/Download/Boost/1.66.0/075d0b4/boost_1_66_0.7z https://boostorg.jfrog.io/artifactory/main/release/1.66.0/source/boost_1_66_0.7z
 
 # Clone ethminer from AUR
 echo "Cloning Ethminer"
