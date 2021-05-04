@@ -109,11 +109,11 @@ COMPRESSXZ=(xz -c -z - --threads=0)
 COMPRESSZST=(zstd -c -z -q - --threads=0)
 EOF
 
-arch-chroot /mnt chown allset:user /home/allset/.makepkg.conf
+arch-chroot /mnt chown allset:users /home/allset/.makepkg.conf
 
 # Clone AMD drivers
 echo "Cloning OpenCL AMD GPU drievrs"
-arch-chroot -u allset /mnt git clone https://github.com/emerkle826/opencl-amd.git /home/allset/custom_packages/opencl-amd
+arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && git clone https://github.com/emerkle826/opencl-amd.git /home/allset/custom_packages/opencl-amd'
 echo "Building drivers"
 arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && cd /home/allset/custom_packages/opencl-amd && git reset --hard 88cc39d2619dddf7c62fc4e4eb3726ab04cb8f92 && makepkg -sicCf --noconfirm'
 
@@ -124,7 +124,7 @@ arch-chroot -u allset /mnt wget -O /home/allset/.hunter/_Base/Download/Boost/1.6
 
 # Clone ethminer from AUR
 echo "Cloning Ethminer"
-arch-chroot -u allset /mnt git clone https://github.com/emerkle826/ethminer.git /home/allset/custom_packages/ethminer
+arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && git clone https://github.com/emerkle826/ethminer.git /home/allset/custom_packages/ethminer'
 echo "Building Ethminer"
 arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && cd /home/allset/custom_packages/ethminer && makepkg -sicCf --noconfirm'
 
@@ -180,7 +180,7 @@ then
 fi
 echo "Using wallet ID: ${WALLETID}"
 echo ${WALLETID} > /mnt/home/allset/ethminer/walletid
-arch-chroot /mnt chown allset:user /home/allset/ethminer/walletid
+arch-chroot /mnt chown allset:users /home/allset/ethminer/walletid
 
 # Unmount disks and reboot
 echo "Installation complete. Unmounting disks and restarting."
