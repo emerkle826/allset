@@ -10,9 +10,9 @@ timedatectl set-ntp true
 echo ""
 echo "Setting up harddrive partitions. Enter \"Ignore\" and/or confirm overwriting partions"
 parted /dev/sda mklabel gpt
-parted /dev/sda mkpart "EFI system partition" fat32 1MiB 512MiB
+parted /dev/sda mkpart "EFI" fat32 1MiB 512MiB
 parted /dev/sda set 1 esp on
-parted /dev/sda mkpart "base filesystem partition" ext4 513MiB 100%
+parted /dev/sda mkpart "system" ext4 513MiB 100%
 
 # Format EFI partition
 mkfs.fat -F32 /dev/sda1
@@ -49,7 +49,7 @@ EOF
 
 # Install base system to new drives
 echo "Installing base system"
-pacstrap /mnt base base-devel linux linux-firmware lxde git openssh firefox ttf-dejavu curl intel-ucode clinfo vi vim
+pacstrap /mnt base base-devel linux linux-firmware lxde git openssh firefox ttf-dejavu curl intel-ucode clinfo vi vim grub efibootmgr
 echo "Base installation complete."
 
 # Setup /etc/fstab
@@ -105,10 +105,40 @@ arch-chroot -u allset /mnt mkdir /home/allset/custom_packages
 echo "Cloning OpenCL AMD GPU drievrs"
 arch-chroot -u allset /mnt git clone https://aur.archlinux.org/opencl-amd.git /home/allset/custom_packages/opencl-amd
 echo "Building drivers"
-arch-chroot -u allset /mnt sh -c 'cd /home/allset/custom_packages/opencl-amd && git reset --hard 88cc39d2619dddf7c62fc4e4eb3726ab04cb8f92 && makepkg -sicCf --noconfirm'
+arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && cd /home/allset/custom_packages/opencl-amd && git reset --hard 88cc39d2619dddf7c62fc4e4eb3726ab04cb8f92 && makepkg -sicCf --noconfirm'
 
 # Clone ethminer from AUR
 echo "Cloning Ethminer"
 arch-chroot -u allset /mnt git clone https://aur.archlinux.org/ethminer.git /home/allset/custom_packages/ethminer
 echo "Building Ethminer"
-arch-chroot -u /mnt sh -c 'cd /home/allset/custom_packages/ethminer && makepkg -sicCf --noconfirm'
+arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && cd /home/allset/custom_packages/ethminer && makepkg -sicCf --noconfirm'
+
+# Setup Networking DHCP
+echo "Setting up Networking/DHCP"
+echo << EOF > /mnt/etc/systemd/network/20-wired.network
+[Match]
+Name=*
+
+[Network]
+DHCP=yes
+EOF
+
+# enable networking services
+# systemd-networkd
+arch-chroot /mnt ln -s /usr/lib/systemd/system/systemd-networkd.service /etc/systemd/system/dbus-org.freedesktop.network1.service
+arch-chroot /mnt ln -s /usr/lib/systemd/system/systemd-networkd.service /etc/systemd/system/multi-user.target.wants/systemd-networkd.service
+arch-chroot /mnt ln -s /usr/lib/systemd/system/systemd-networkd.socket /etc/systemd/system/sockets.target.wants/systemd-networkd.socket
+arch-chroot /mnt ln -s /usr/lib/systemd/system/systemd-networkd-wait-online.service /etc/systemd/system/network-online.target.wants/systemd-networkd-wait-online.service
+# systemd-resolvd
+arch-chroot /mnt ln -s /usr/lib/systemd/system/systemd-resolved.service /etc/systemd/system/dbus-org.freedesktop.resolve1.service
+arch-chroot /mnt ln -s /usr/lib/systemd/system/systemd-resolved.service /etc/systemd/system/multi-user.target.wants/systemd-resolved.service
+
+# Setup LXDM
+echo "setting up LXDM for GPU"
+arch-chroot /mnt ln -s /usr/lib/systemd/system/lxdm.service /etc/systemd/system/display-manager.service
+echo "autologin=allset" >> /mnt/etc/lxdm/lxdm.conf
+echo "session=/usr/bin/startlxde" >> /mnt/etc/lxdm/lxdm.conf
+
+# Setup GRUB
+arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB
+arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
