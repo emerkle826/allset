@@ -1,0 +1,21 @@
+# This script belongs in:
+# /etc/systemd/system/ethminer.service
+#
+# sudo systenctl daemon-reload
+# sudo systemctl enable ethminer.service
+# sudo systemctl start ethminer.service
+[Unit]
+Description=Run Etherium Miner script at specific times
+Wants=network-online.target
+After=network-online.target nss-lookup.target
+
+[Timer]
+OnBootSec=30sec
+OnCalendar=Mon..Sun 00:00
+OnCalendar=Mon..Sun 12:15
+OnCalendar=Mon..Sun 18:15
+Persistent=true
+AccuracySec=1us
+
+[Install]
+WantedBy=timers.target

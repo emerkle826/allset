@@ -47,7 +47,7 @@ EOF
 
 # Install base system to new drives
 echo "Installing base system"
-pacstrap /mnt base base-devel linux linux-firmware lxde git openssh firefox ttf-dejavu curl intel-ucode clinfo vi vim grub efibootmgr bash-completion wget logrotate
+pacstrap /mnt base base-devel linux linux-firmware lxde git openssh firefox ttf-dejavu curl intel-ucode clinfo vi vim grub efibootmgr bash-completion wget logrotate ntp
 echo "Base installation complete."
 
 # Setup /etc/fstab
@@ -143,6 +143,8 @@ arch-chroot /mnt ln -s /usr/lib/systemd/system/systemd-resolved.service /etc/sys
 arch-chroot /mnt ln -s /usr/lib/systemd/system/systemd-resolved.service /etc/systemd/system/multi-user.target.wants/systemd-resolved.service
 # ssh daemon
 arch-chroot /mnt ln -s /usr/lib/systemd/system/sshd.service /etc/systemd/system/multi-user.target.wants/sshd.service
+# ntp daemon
+arch-chroot /mnt ln -s /usr/lib/systemd/system/ntpd.service /etc/systemd/system/multi-user.target.wants/ntpd.service
 
 # Setup logrotate
 cat << EOF > /etc/logrotate.d/ethminer
@@ -176,8 +178,10 @@ arch-chroot -u allset /mnt wget -O /home/allset/ethminer/start_miner https://raw
 arch-chroot -u allset /mnt wget -O /home/allset/ethminer/stop_miner https://raw.githubusercontent.com/emerkle826/allset/master/scripts/stop_miner
 arch-chroot /mnt wget -O /home/allset/ethminer/ethminer.service https://raw.githubusercontent.com/emerkle826/allset/master/scripts/ethminer.service
 chmod 755 /mnt/home/allset/ethminer/*
-arch-chroot /mnt ln -s /home/allset/ethminer/ethminer.service /etc/systemd/system/multi-user.target.wants/ethminer.service
-arch-chroot /mnt ln -s /home/allset/ethminer/ethminer.service /etc/systemd/system/ethminer.service
+arch-chroot /mnt ln -s /home/allset/ethminer/ethminer_start.service /etc/systemd/system/multi-user.target.wants/ethminer_start.service
+arch-chroot /mnt ln -s /home/allset/ethminer/ethminer_start.service /etc/systemd/system/ethminer_start.service
+arch-chroot /mnt ln -s /home/allset/ethminer/ethminer_stop.service /etc/systemd/system/multi-user.target.wants/ethminer_stop.service
+arch-chroot /mnt ln -s /home/allset/ethminer/ethminer_stop.service /etc/systemd/system/ethminer_stop.service
 
 echo "Please type in your Etherium wallet ID (default: 94F533789cf2b9b33c3bEf1d3200c8f9B2792558):"
 read WALLETID

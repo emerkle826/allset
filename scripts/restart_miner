@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo "Stopping miner..."
+sudo systemctl stop ethminer.service
+echo "Restarting miner..."
+sudo systemctl start ethminer.service
+echo "Type miner_status to see staus"

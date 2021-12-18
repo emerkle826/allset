@@ -6,7 +6,7 @@
 
 MINING_PROTOCOL="stratum1+tcp"
 MINING_WALLET="0x"$(< ${HOME}/ethminer/walletid)
-MINING_HOST="us1.ethermine.org"
+MINING_HOST="us2.ethermine.org"
 MINING_PORT="4444"
 API_PORT=8080
 
@@ -39,7 +39,7 @@ function wait_for_gpus() {
     echo "clinfo detected no gpus" >> /home/allset/ethminer/miner.log
     clinfo >> /home/allset/ethminer/miner.log
     # no gpus ready
-    sleep 5
+    sleep 10
   fi
   # try again
   gpu_count=$(clinfo|grep -m 1 "Number of devices"|awk '{print $4}')
@@ -57,8 +57,23 @@ function wait_for_gpus() {
   fi
 }
 
-wait_for_gpus
+function stop_display() {
+  # make sure GPUs exist
+  gpu_count=$(clinfo -l|grep Device|wc -l)
+  if [ ${gpu_count} -gt 0 ]
+  then
+    date >> /home/allset/ethminer/miner.log
+    echo "Found ${gpu_count} GPU(s), stopping display"
+    sudo systemctl stop lxdm
+  else
+    date >> /home/allset/ethminer/miner.log
+    echo "Found ${gpu_count} GPU(s), exiting script"
+    exit -2
+  fi
+}
 
+wait_for_gpus
+stop_display
 get_option
 
 # build pool
