@@ -5,12 +5,14 @@
 # sudo systemctl enable ethminer.service
 # sudo systemctl start ethminer.service
 [Unit]
-Description=Run Etherium Miner script at startup
+Description=Run Etherium Miner script
 Wants=network-online.target
 After=network-online.target nss-lookup.target
 
 [Service]
 ExecStart=/home/allset/ethminer/start_miner
-Type=oneshot
-RemainAfterExit=yes
+ExecStop=/home/allset/ethminer/stop_miner
+KillSignal=SIGQUIT
+PIDFile=/home/allset/ethminer/miner.pid
+Type=forking
 User=allset

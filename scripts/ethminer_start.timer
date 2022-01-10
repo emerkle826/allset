@@ -10,7 +10,7 @@ Wants=network-online.target
 After=network-online.target nss-lookup.target
 
 [Timer]
-OnBootSec=30sec
+OnActiveSec=10sec
 OnCalendar=Mon..Sun 00:00
 OnCalendar=Mon..Sun 12:15
 OnCalendar=Mon..Sun 18:15

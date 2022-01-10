@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PID_FILE=${HOME}/ethminer/miner.pid
+PID_FILE=/home/allset/ethminer/miner.pid
 
 # check that the pid file exists
 echo "================================================"
@@ -11,14 +11,16 @@ then
   PID=`cat ${PID_FILE}`
   echo "PID is ${PID}"
   # check that the process is an actual ethminer process
-  ps -q ${PID}|grep -sq ethminer
+  ps -q ${PID}|grep -sq teamredminer
   IS_ETHMINER="$?"
-  if [ "${IS_ETHMINER}" -eq "0" ]
+  ps -q ${PID}
+  echo "IS_ETHMINER: ${IS_ETHMINER}"
+  if [ "${IS_ETHMINER}" = "0" ]
   then
-    echo "PID is an ethminer process, stoping"
+    echo "PID is a teamredminer process, stoping"
     kill -6 ${PID}
   else
-    echo "PID is not an ethminer process"
+    echo "PID is not a teamredminer process"
     ps -fq ${PID}
     echo ""
     echo "To start mining, execute \"start_miner\""
@@ -27,3 +29,4 @@ else
   echo "NO READABLE PID FILE: ${PID_FILE}"
 fi
 echo "================================================"
+
