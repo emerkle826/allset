@@ -121,6 +121,12 @@ arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && git clone https://
 echo "Building Ethminer"
 arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && cd /home/allset/custom_packages/ethminer && makepkg -sicCf --noconfirm'
 
+# Clone teamredminer from AUR
+echo "Cloning Teamredminer"
+arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && git clone https://aur.archlinux.org/teamredminer-bin.git /home/allset/custom_packages/teamredminer-bin'
+echo "Building Teamredminer"
+arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && cd /home/allset/custom_packages/teamredminer-bin && makepkg -sicCf --noconfirm'
+
 # Setup Networking DHCP
 echo "Setting up Networking/DHCP"
 mkdir -p /mnt/etc/systemd/network /mnt/etc/systemd/system/sockets.target.wants /mnt/etc/systemd/system/network-online.target.wants
@@ -156,6 +162,7 @@ cat << EOF > /etc/logrotate.d/ethminer
    compress
 }
 EOF
+arch-chroot /mnt mkdir -p /etc/systemd/system/timers.target.wants
 arch-chroot /mnt ln -s /usr/lib/systemd/system/logrotate.timer /etc/systemd/system/timers.target.wants/logrotate.timer
 
 # Setup LXDM
@@ -170,7 +177,7 @@ arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/efi --bootloa
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
 # Setup ethminer scripts
-echo "Setting up Ethminer scripts"
+echo "Setting up Teamredminer scripts"
 arch-chroot -u allset /mnt mkdir /home/allset/ethminer
 arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && echo "export PATH=~/ethminer:${PATH}" >> /home/allset/.bashrc'
 arch-chroot -u allset /mnt wget -O /home/allset/ethminer/miner_status https://raw.githubusercontent.com/emerkle826/allset/master/scripts/miner_status
@@ -178,10 +185,12 @@ arch-chroot -u allset /mnt wget -O /home/allset/ethminer/start_miner https://raw
 arch-chroot -u allset /mnt wget -O /home/allset/ethminer/stop_miner https://raw.githubusercontent.com/emerkle826/allset/master/scripts/stop_miner
 arch-chroot /mnt wget -O /home/allset/ethminer/ethminer.service https://raw.githubusercontent.com/emerkle826/allset/master/scripts/ethminer.service
 chmod 755 /mnt/home/allset/ethminer/*
-arch-chroot /mnt ln -s /home/allset/ethminer/ethminer_start.service /etc/systemd/system/multi-user.target.wants/ethminer_start.service
+arch-chroot /mnt ln -s /home/allset/ethminer/ethminer_start.timer /etc/systemd/system/ethminer_start.timer
 arch-chroot /mnt ln -s /home/allset/ethminer/ethminer_start.service /etc/systemd/system/ethminer_start.service
-arch-chroot /mnt ln -s /home/allset/ethminer/ethminer_stop.service /etc/systemd/system/multi-user.target.wants/ethminer_stop.service
+arch-chroot /mnt ln -s /home/allset/ethminer/ethminer_stop.timer /etc/systemd/system/ethminer_stop.timer
 arch-chroot /mnt ln -s /home/allset/ethminer/ethminer_stop.service /etc/systemd/system/ethminer_stop.service
+arch-chroot /mnt ln -s /home/allset/ethminer/ethminer_start.timer /etc/systemd/system/timers.target.wants/ethminer_start.timer
+arch-chroot /mnt ln -s /home/allset/ethminer/ethminer_stop.timer /etc/systemd/system/timers.target.wants/ethminer_stop.timer
 
 echo "Please type in your Etherium wallet ID (default: 94F533789cf2b9b33c3bEf1d3200c8f9B2792558):"
 read WALLETID
