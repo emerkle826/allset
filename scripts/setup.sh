@@ -183,7 +183,10 @@ arch-chroot -u allset /mnt sh -c 'export HOME=/home/allset && echo "export PATH=
 arch-chroot -u allset /mnt wget -O /home/allset/ethminer/miner_status https://raw.githubusercontent.com/emerkle826/allset/master/scripts/miner_status
 arch-chroot -u allset /mnt wget -O /home/allset/ethminer/start_miner https://raw.githubusercontent.com/emerkle826/allset/master/scripts/start_miner
 arch-chroot -u allset /mnt wget -O /home/allset/ethminer/stop_miner https://raw.githubusercontent.com/emerkle826/allset/master/scripts/stop_miner
-arch-chroot /mnt wget -O /home/allset/ethminer/ethminer.service https://raw.githubusercontent.com/emerkle826/allset/master/scripts/ethminer.service
+arch-chroot /mnt wget -O /home/allset/ethminer/ethminer_start.service https://raw.githubusercontent.com/emerkle826/allset/master/scripts/ethminer_start.service
+arch-chroot /mnt wget -O /home/allset/ethminer/ethminer_start.timer https://raw.githubusercontent.com/emerkle826/allset/master/scripts/ethminer_start.timer
+arch-chroot /mnt wget -O /home/allset/ethminer/ethminer_stop.service https://raw.githubusercontent.com/emerkle826/allset/master/scripts/ethminer_stop.service
+arch-chroot /mnt wget -O /home/allset/ethminer/ethminer_stop.timer https://raw.githubusercontent.com/emerkle826/allset/master/scripts/ethminer_stop.timer
 chmod 755 /mnt/home/allset/ethminer/*
 arch-chroot /mnt ln -s /home/allset/ethminer/ethminer_start.timer /etc/systemd/system/ethminer_start.timer
 arch-chroot /mnt ln -s /home/allset/ethminer/ethminer_start.service /etc/systemd/system/ethminer_start.service

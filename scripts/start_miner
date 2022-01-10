@@ -58,8 +58,8 @@ function stop_display() {
   fi
 }
 
-#wait_for_gpus
-#stop_display
+wait_for_gpus
+stop_display
 
 # build pool
 MINING_POOL="${MINING_PROTOCOL}://${MINING_HOST}:${MINING_PORT}"
