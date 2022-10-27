@@ -1,0 +1,41 @@
+name: Release Test
+
+on: [push, pull_request]
+
+jobs:
+  build-dse-6_8x:
+    strategy:
+      fail-fast: false
+      matrix:
+        dse-version: [6.8.25, 6.8.26, 6.8.27]
+        image-base: [jdk8, jdk11]
+        include:
+          - dse-version: 6.8.27
+            latest: true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - if: ${{ matrix.latest }} && ${{ matrix.image-base }} == 'jdk8'
+        name: Publish ${{ matrix.dse-version }} (${{ matrix.image-base }}) to Registry
+        run: |
+          RELEASE_VERSION="${GITHUB_REF##*/}"
+          echo "DSE_VERSION=${{ matrix.dse-version }}" && \
+            echo "Tags: --tag datastax/dse-mgmtapi-6_8:6.8 --tag datastax/dse-mgmtapi-6_8:${{ matrix.dse-version }} --tag datastax/dse-mgmtapi-6_8:${{ matrix.dse-version }}-$RELEASE_VERSION --file dse-68/Dockerfile.${{ matrix.image-base }}"
+      - if: ${{ matrix.latest }} && ${{ matrix.image-base }} != 'jdk8'
+        name: Publish ${{ matrix.dse-version }} (${{ matrix.image-base }}) to Registry
+        run: |
+          RELEASE_VERSION="${GITHUB_REF##*/}"
+          echo "DSE_VERSION=${{ matrix.dse-version }}" && \
+            echo "Tags: --tag datastax/dse-mgmtapi-6_8:6.8-${{ matrix.image-base }}  --tag datastax/dse-mgmtapi-6_8:${{ matrix.dse-version }}-${{ matrix.image-base }} --tag datastax/dse-mgmtapi-6_8:${{ matrix.dse-version }}-${{ matrix.image-base }}-$RELEASE_VERSION"
+      - if: ${{ !matrix.latest }} && ${{ matrix.image-base }} == 'jdk8'
+        name: Publish ${{ matrix.dse-version }} (${{ matrix.image-base }}) to Registry
+        run: |
+          RELEASE_VERSION="${GITHUB_REF##*/}"
+          echo "DSE_VERSION=${{ matrix.dse-version }}" && \
+            echo "Tags: --tag datastax/dse-mgmtapi-6_8:${{ matrix.dse-version }} --tag datastax/dse-mgmtapi-6_8:${{ matrix.dse-version }}-$RELEASE_VERSION"
+      - if: ${{ !matrix.latest }} && ${{ matrix.image-base }} != 'jdk8'
+        name: Publish ${{ matrix.cassandra-version }} (${{ matrix.image-base }}) to Registry
+        run: |
+          RELEASE_VERSION="${GITHUB_REF##*/}"
+          echo "DSE_VERSION=${{ matrix.dse-version }}" && \
+            echo "Tags: --tag datastax/dse-mgmtapi-6_8:${{ matrix.dse-version }}-${{ matrix.image-base }} --tag datastax/dse-mgmtapi-6_8:${{ matrix.dse-version }}-${{ matrix.image-base }}-$RELEASE_VERSION"
