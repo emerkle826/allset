@@ -5,12 +5,18 @@
 #     https://ethermine.org/miners/94F533789cf2b9b33c3bEf1d3200c8f9B2792558/dashboard
 # teamredminer -o stratum+tcp://us2.ethermine.org:4444 -a ethash -u 0x94F533789cf2b9b33c3bEf1d3200c8f9B2792558
 
-MINING_PROTOCOL="stratum+tcp"
+#MINING_PROTOCOL="stratum+tcp"
+MINING_PROTOCOL="stratum+ssl"
 MINING_ALGO="ethash"
-MINING_WALLET="0x"$(< ${HOME}/ethminer/walletid)
-MINING_HOST="us2.ethermine.org"
+#MINING_WALLET="0x"$(< ${HOME}/ethminer/walletid)
+MINING_WALLET=$(< ${HOME}/ethminer/walletid.xrp)
+#MINING_HOST="us2.ethermine.org"
+MINING_HOST="ethash.unmineable.com"
 MINING_PORT="4444"
 API_PORT=8080
+COIN_TYPE="XRP"
+REFER_CODE="bmine"
+WALLET_SUFFIX="unmineable_worker_allset1"
 
 function wait_for_gpus() {
   # get clinfo and wait for cards to be ready
@@ -59,13 +65,15 @@ function stop_display() {
 }
 
 wait_for_gpus
-stop_display
+#stop_display
 
 # build pool
 MINING_POOL="${MINING_PROTOCOL}://${MINING_HOST}:${MINING_PORT}"
 #build command
 # teamredminer -o stratum+tcp://us2.ethermine.org:4444 -a ethash -u 0x94F533789cf2b9b33c3bEf1d3200c8f9B2792558
-MINING_CMD="teamredminer -o ${MINING_POOL} -a ${MINING_ALGO} -u ${MINING_WALLET}"
+# teamredminer -o stratum+ssl://ethash.unmineable.com:4444 -a ethash -u XRP:rhmoLGYrQGPTaDkf3uzqdDp7DCY9uAt5Ps.unmineable_worker_biheenu#bmine
+#MINING_CMD="teamredminer -o ${MINING_POOL} -a ${MINING_ALGO} -u ${COIN_TYPE}:${MINING_WALLET}.${WALLET_SUFFIX}#${REFER_CODE}"
+MINING_CMD="teamredminer --cm_api_listen=0:3333 --api_listen=0:8080 -o ${MINING_POOL} -a ${MINING_ALGO} -u ${COIN_TYPE}:${MINING_WALLET}.${WALLET_SUFFIX}#${REFER_CODE}"
 echo "Running Mining Command: ${MINING_CMD}"
 echo ""
 echo "To see miner status, run \"miner_status\""

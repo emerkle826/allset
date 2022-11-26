@@ -47,7 +47,7 @@ EOF
 
 # Install base system to new drives
 echo "Installing base system"
-pacstrap /mnt base base-devel linux linux-firmware lxde git openssh firefox ttf-dejavu curl intel-ucode clinfo vi vim grub efibootmgr bash-completion wget logrotate ntp
+pacstrap /mnt base base-devel linux linux-firmware lxde git openssh firefox ttf-dejavu curl intel-ucode clinfo vi vim grub efibootmgr bash-completion wget logrotate ntp jq
 echo "Base installation complete."
 
 # Setup /etc/fstab
