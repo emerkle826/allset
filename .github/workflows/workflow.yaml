@@ -28,4 +28,4 @@ jobs:
           echo "Flag set: $FLAG"
         env:
           VERSION: ${{ inputs.version }}
-          FLAG: ${{ inputs.tags }}
+          FLAG: ${{ inputs.flag }}
