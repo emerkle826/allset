@@ -59,15 +59,15 @@ jobs:
           runVersion: "3.11"
         - version: "6.8.29"
           runVersion: "4.0"
-        include:
-          - version: "6.8.29"
-            runVersion: "6.8"
-            serverImage: datastax/dse-mgmtapi-6_8:6.8.29-jdk8
-            serverType: dse
-          - version: "6.8.29"
-            runVersion: "ALL"
-            serverImage: datastax/dse-mgmtapi-6_8:6.8.29-jdk8
-            serverType: dse
+        # include:
+        #   - version: "6.8.29"
+        #     runVersion: "6.8"
+        #     serverImage: datastax/dse-mgmtapi-6_8:6.8.29-jdk8
+        #     serverType: dse
+        #   - version: "6.8.29"
+        #     runVersion: "ALL"
+        #     serverImage: datastax/dse-mgmtapi-6_8:6.8.29-jdk8
+        #     serverType: dse
     env:
       INPUT_VER: ${{ inputs.version }}
       MATRIX_VER: ${{ matrix.version }}
@@ -76,3 +76,9 @@ jobs:
         if: ${{ inputs.version == 'ALL' || startsWith( matrix.version, inputs.version ) }}
         run: |
           echo "Run with input version: $INPUT_VER and matrix version: $MATRIX_VER"
+      - name: set ENV
+        run: |
+          if test ( "$INPUT_VER" == "6.8" ); then echo "DSE=true" >> $GITHUB_ENV; fi
+      - name: show ENV
+        run: |
+          env|sort
