@@ -44,10 +44,20 @@ jobs:
         - "3.11.14"
         - "4.0.7"
         - "6.8.29"
-        shouldRun:
-        - ${{ inputs.version == 'ALL' || startsWith( matrix.version, inputs.version ) }}
+        runVersion: ${{ inputs.version }}
         exclude:
-        - shouldRun: false
+        - version: "3.11.14"
+          runVersion: "4.0"
+        - version: "3.11.14"
+          runVersion: "6.8"
+        - version: "4.0.7"
+          runVersion: "3.11"
+        - version: "4.0.7"
+          runVersion: "6.8"
+        - version: "6.8.29"
+          runVersion: "3.11"
+        - version: "6.8.29"
+          runVersion: "4.0"
     env:
       INPUT_VER: ${{ inputs.version }}
       MATRIX_VER: ${{ matrix.version }}
