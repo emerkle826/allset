@@ -12,6 +12,7 @@ on:
           - '3.11'
           - '4.0'
           - '6.8'
+          - 'ALL'
       flag:
         description: 'Toggle this boolean to set flag variable'
         required: false
@@ -29,3 +30,9 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
           FLAG: ${{ inputs.flag }}
+  skip-job:
+    if: ${{ inputs.version == '3.11' || inputs.version == 'ALL' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "This job should run if the input is 3.11 or ALL. Should be skipped otherwise."
