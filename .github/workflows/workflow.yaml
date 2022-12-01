@@ -93,17 +93,17 @@ jobs:
         # - stop_resume_scale_up # Odd insufficient CPU issues in kind+GHA
         exclude:
         - version: "3.11.14"
-          runVersion: "4.0"
+          workflowVersion: "4.0"
         - version: "3.11.14"
-          runVersion: "6.8"
+          workflowVersion: "6.8"
         - version: "4.0.7"
-          runVersion: "3.11"
+          workflowVersion: "3.11"
         - version: "4.0.7"
-          runVersion: "6.8"
+          workflowVersion: "6.8"
         - version: "6.8.29"
-          runVersion: "3.11"
+          workflowVersion: "3.11"
         - version: "6.8.29"
-          runVersion: "4.0"
+          workflowVersion: "4.0"
     env:
       CGO_ENABLED: 0
       M_INTEG_DIR: ${{ matrix.integration_test }}
