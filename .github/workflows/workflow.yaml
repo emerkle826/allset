@@ -78,7 +78,7 @@ jobs:
           echo "Run with input version: $INPUT_VER and matrix version: $MATRIX_VER"
       - name: set ENV
         run: |
-          if test ( "$INPUT_VER" == "6.8" ); then echo "DSE=true" >> $GITHUB_ENV; fi
+          if [ "$INPUT_VER" == "6.8" ]; then echo "DSE=true" >> $GITHUB_ENV; fi
       - name: show ENV
         run: |
           env|sort
