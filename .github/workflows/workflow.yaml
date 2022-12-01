@@ -17,10 +17,7 @@ on:
         required: false
         type: boolean
         default: false
-      environment:
-        description: 'Environment input'
-        required: true
-        type: environment
+        
 
 jobs:
   log-the-inputs:
@@ -29,8 +26,6 @@ jobs:
       - run: |
           echo "Cassandra or DSE version: $VERSION"
           echo "Flag set: $FLAG"
-          echo "Environment: $ENVIRONMENT"
         env:
           VERSION: ${{ inputs.version }}
           FLAG: ${{ inputs.tags }}
-          ENVIRONMENT: ${{ inputs.environment }}
