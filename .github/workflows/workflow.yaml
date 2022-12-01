@@ -59,6 +59,10 @@ jobs:
           runVersion: "3.11"
         - version: "6.8.29"
           runVersion: "4.0"
+        include:
+          - version: "6.8.29"
+            serverImage: datastax/dse-mgmtapi-6_8:6.8.29-jdk8
+            serverType: dse
     env:
       INPUT_VER: ${{ inputs.version }}
       MATRIX_VER: ${{ matrix.version }}
