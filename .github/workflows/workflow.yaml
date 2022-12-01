@@ -44,7 +44,8 @@ jobs:
         - "3.11.14"
         - "4.0.7"
         - "6.8.29"
-        runVersion: ${{ inputs.version }}
+        runVersion:
+        - ${{ inputs.version }}
         exclude:
         - version: "3.11.14"
           runVersion: "4.0"
