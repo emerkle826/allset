@@ -36,3 +36,19 @@ jobs:
     steps:
       - run: |
           echo "This job should run if the input is 3.11 or ALL. Should be skipped otherwise."
+  matrix-job:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version:
+        - "3.11.14"
+        - "4.0.7"
+        - "6.8.29"
+    env:
+      INPUT_VER: ${{ inputs.version }}
+      MATRIX_VER: ${{ matrix.version }}
+    steps:
+      - name: conditional
+        if: ${{ inputs.version == 'ALL' || startsWith( matrix.version, inputs.version ) }}
+        run: |
+          echo "Run with input version: $INPUT_VER and matrix version: $MATRIX_VER"
